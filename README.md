@@ -18,14 +18,14 @@
 
 ### 安装 Typst
 
-先安装 [Typst](https://typst.app/) (>=0.14)
+先安装 [Typst](https://github.com/typst/typst) (>=0.14)
 
 ```bash
 # macOS / Linux
 brew install typst
 
-# Windows (Scoop)
-scoop install typst
+# Windows
+winget install --id Typst.Typst
 ```
 并安装[Python](https://www.python.org/) (>=3.8)以及所有依赖包
 ```
