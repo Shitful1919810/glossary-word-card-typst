@@ -29,7 +29,7 @@ winget install --id Typst.Typst
 ```
 并安装[Python](https://www.python.org/) (>=3.8)以及所有依赖包
 ```
-python -m pip install -r requirements.txt 
+pip install -r requirements.txt 
 ```
 
 ### 构建项目
