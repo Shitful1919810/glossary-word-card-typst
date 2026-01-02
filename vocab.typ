@@ -90,7 +90,7 @@
         1145141919810pt
       }
 
-      // check if a new line is needed
+      // check whether a new line should be started
       if consumed-width + default-item-width-nxt < max-width {
         processed-array.push((items-list.at(cur), 0pt, 0pt))
       } else {
@@ -98,10 +98,10 @@
 
         // adjust width and height of all items in last row
         for i in range(last, cur + 1) {
-          // divide tailing space into all items in last row
+          // distribute remaining horizontal space evenly across items in the last row
           processed-array.at(i).at(1) = (max-width - consumed-width) / (cur - last + 1)
 
-          // adjust the height of all items in last row
+          // adjust the height of all items in the last row to match the tallest one
           processed-array.at(i).at(2) = cur-max-height - item-size-info.at(i).height
         }
         last = cur + 1
