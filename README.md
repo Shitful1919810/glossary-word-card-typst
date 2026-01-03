@@ -1,6 +1,7 @@
 # 日语生词学习模板 (Typst Word Card Template)
 
-一个基于 **Typst** 的模板项目，用于记录日语学习中的生词笔记，支持单词、假名、释义、例句等内容的优雅排版
+一个基于 **Typst** 的模板项目，用于记录日语学习中的生词笔记
+
 项目中使用了 [`rubby`](https://typst.app/universe/package/rubby) 包来支持日语 **振假名（ルビ）** 的展示
 
 ## 项目简介
