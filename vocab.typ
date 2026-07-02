@@ -33,30 +33,34 @@
   height: auto,
   extend_width: 0pt,
   extend_height: 0pt,
-) = box(
-  width: auto,
-  height: auto,
-  stroke: 1pt + gray,
-  radius: 6pt,
-  inset: 2pt,
-)[
-  #let item = vocab-content(词, 义, 例, 类, 注)
+) = {
+  let item = vocab-content(词, 义, 例, 类, 注)
 
-  #context {
+  context {
     let sz_item = measure(item)
-    let card-width = if width == auto { sz_item.width + 1.6em + extend_width } else { width }
-    let card-height = if height == auto { sz_item.height + 1.6em + extend_height } else { height }
+    let outer-width = if width == auto { auto } else { width }
+    let outer-height = if height == auto { auto } else { height }
+    let inner-width = if width == auto { sz_item.width + 1.6em + extend_width } else { 100% }
+    let inner-height = if height == auto { sz_item.height + 1.6em + extend_height } else { 100% }
 
-    block(
-      width: card-width,
-      height: card-height,
-      item,
-      inset: 0.8em,
-      radius: 4pt,
-      stroke: 0.6pt + gray,
-    )
+    box(
+      width: outer-width,
+      height: outer-height,
+      stroke: 1pt + gray,
+      radius: 6pt,
+      inset: 2pt,
+    )[
+      #block(
+        width: inner-width,
+        height: inner-height,
+        item,
+        inset: 0.8em,
+        radius: 4pt,
+        stroke: 0.6pt + gray,
+      )
+    ]
   }
-]
+}
 
 #let r = get-ruby(
   size: 0.5em, // Ruby font size
@@ -79,26 +83,52 @@
   sizes
 }
 
-#let render-row(items, sizes, start, end, max-width, row-width, row-height) = {
+#let render-row(
+  items,
+  sizes,
+  start,
+  end,
+  max-width,
+  row-width,
+  row-height,
+  gutter,
+  stretch: true,
+) = {
   let row-len = end - start + 1
-  let extra-width = (max-width - row-width) / row-len
+  let row-gutter-width = gutter * (row-len - 1)
+  let remaining-width = calc.max(0pt, max-width - row-width - row-gutter-width)
 
   for i in range(start, end + 1) {
     let item = items.at(i)
     let size = sizes.at(i)
+    let extra-width = if stretch and row-width > 0pt {
+      remaining-width * (size.width / row-width)
+    } else {
+      0pt
+    }
+
     vocab(
       ..item,
       width: size.width + extra-width,
       height: row-height,
     )
+
+    if i < end {
+      h(gutter)
+    }
   }
 }
 
-#let auto-arrange(items-list-in) = {
+#let auto-arrange(
+  items-list-in,
+  gutter: 2pt,
+  row-safe-margin: 1pt,
+  stretch-last-row: false,
+) = {
   layout(size => {
     let items-list = items-list-in
     let N = items-list.len()
-    let max-width = size.width - 1pt
+    let max-width = size.width - row-safe-margin
     let sizes = item-sizes(items-list)
 
     let row-start = 0
@@ -112,10 +142,23 @@
       row-height = calc.max(row-height, item-size.height)
 
       let next-width = if cur + 1 < N { sizes.at(cur + 1).width } else { none }
-      let is-row-end = next-width == none or row-width + next-width >= max-width
+      let row-len = cur - row-start + 1
+      let is-last-row = next-width == none
+      let width-with-next = if is-last-row { none } else { row-width + next-width + gutter * row-len }
+      let is-row-end = is-last-row or width-with-next >= max-width
 
       if is-row-end {
-        render-row(items-list, sizes, row-start, cur, max-width, row-width, row-height)
+        render-row(
+          items-list,
+          sizes,
+          row-start,
+          cur,
+          max-width,
+          row-width,
+          row-height,
+          gutter,
+          stretch: stretch-last-row or not is-last-row,
+        )
         row-start = cur + 1
         row-width = 0pt
         row-height = 0pt
@@ -124,4 +167,3 @@
     }
   })
 }
-
