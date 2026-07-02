@@ -1,50 +1,7 @@
 #import "vocab.typ": *
-#set page(
-  paper: "a4",
-  margin: (top: 16mm, bottom: 20mm, left: 16mm, right: 16mm),
-)
+#import "template/doc.typ": japanese-vocab-doc
 
-#set text(
-  font: (
-    "Source Han Serif SC",
-  ),
-  size: 12pt,
-)
-
-
-#set page(numbering: none)
-#align(center + horizon)[
-  #set text(size: 56pt, weight: "bold")
-  日语词汇表
-
-  #v(2em)
-
-  #set text(size: 18pt)
-  作者：Shitful
-
-  日期：#datetime.today().display()
-]
-
-
-#pagebreak()
-#pagebreak()
-#counter(page).update(1)
-#set page(footer: context [
-  #set text(
-    font: (
-      "Source Han Serif",
-    ),
-    size: 16pt,
-  )
-  *谢特伏词汇表*
-  #h(1fr)
-  #counter(page).display("1/1", both: true)  // 右侧页码
-])
-
-
-
-
-// #grid(align: left)[
+#show: japanese-vocab-doc
 #let items-list = (
   item-tuple([#r[なご][和]む], "平静下来,温和起来", "表情が和む", "五段"),
   item-tuple([#r[おく|ば][奥|歯]], "槽牙，臼齿", "奥歯に物がはさまる。", "名词"),
